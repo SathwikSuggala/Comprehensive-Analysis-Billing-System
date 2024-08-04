@@ -66,7 +66,75 @@ public class DataBase {
     	}
     	return value;
     }    
- 
+
+    
+    
+//to get today buyers details to add them into today buyers table in main page
+    public static Object[][] todayBuyerDetails(){
+    	Object[][] todayBuyerAmount = {{}};
+    	try (Connection con = getConnection();){
+    		
+    		Statement stmt = con.createStatement();
+			int i=0;
+			ArrayList<String> names=new ArrayList<>();
+			ArrayList<String> amounts=new ArrayList<>();
+			ResultSet res= stmt.executeQuery("select outletname,sum(total) from bills where billdate=current_date() group by outletname");			
+			while(res.next()) {
+				names.add(res.getString(1));
+				amounts.add(res.getString(2));
+				//i++;
+			}
+			
+			todayBuyerAmount = new Object[names.size()][2];
+			for(i=0;i<names.size();i++) {
+				todayBuyerAmount[i][0]=names.get(i);
+				todayBuyerAmount[i][1]=amounts.get(i);
+			}
+    	}
+    	catch(SQLException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return todayBuyerAmount;
+    }
+    
+    
+//to get the detailed view of sales done today
+    public static Object[][] todaySalesDetails(){
+    	
+    	Object[][] todaySales = {{}};
+    	try (Connection con = getConnection();){
+    		
+    		Statement stmt = con.createStatement();
+			int i=0;
+			ArrayList<String> inletnames=new ArrayList<>();
+			ArrayList<String> outletnames=new ArrayList<>();
+			ArrayList<String> productnames=new ArrayList<>();
+			ArrayList<String> amounts=new ArrayList<>();
+			ResultSet res= stmt.executeQuery("select inletname,outletname,productname,total from bills where billdate=current_date() ");			
+			while(res.next()) {
+				inletnames.add(res.getString(1));
+				outletnames.add(res.getString(2));
+				productnames.add(res.getString(3));
+				amounts.add(res.getString(4));
+				//i++;
+			}
+			
+			todaySales = new Object[productnames.size()][4];
+			for(i=0;i<productnames.size();i++) {
+				todaySales[i][0]=inletnames.get(i);
+				todaySales[i][1]=outletnames.get(i);
+				todaySales[i][2]=productnames.get(i);
+				todaySales[i][3]=amounts.get(i);
+			}
+    	}
+    	catch(SQLException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return todaySales;
+    }
+    
     
 //to add the outlet details.
     public static void addOutletsDetails(String outletName, String ownerName, String address, String contact) {

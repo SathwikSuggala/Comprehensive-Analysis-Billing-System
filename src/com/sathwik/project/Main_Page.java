@@ -191,23 +191,10 @@ class Frame extends JFrame implements ActionListener {
         Today_Total_Orders_Count = new JTextField("NULL");
         Today_Total_Orders_Count.setBounds((int)(sw*0.07),(int)(sh*0.22),(int)(sw*0.08),(int)(sh*0.05));
         Today_Total_Orders_Count.setFont(mainFont);
-        //Connection con;
-		try {
-//			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_project", "root", "1234");
-//			Statement stmt = con.createStatement();
-//			ResultSet res=stmt.executeQuery("select count(billdate) from bills where billdate =" + "'" + LocalDate.now().toString() + "'");
-//			String count="";
-//			while(res.next()) {
-//				count=res.getString(1);
-//			}
 			
 			Today_Total_Orders_Count.setText(DataBase.countTodayOrders());
 			Today_Total_Orders_Count.setEditable(false);
 			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
         c.add(Today_Total_Orders_Count);
         
         Today_Total_Orders_Worth = new JLabel("Worth");
@@ -218,17 +205,11 @@ class Frame extends JFrame implements ActionListener {
         Today_Total_Orders_Worth_Value = new JTextField("NULL");
         Today_Total_Orders_Worth_Value.setBounds((int)(sw*0.03),(int)(sh*0.36),(int)(sw*0.15),(int)(sh*0.05));
         Today_Total_Orders_Worth_Value.setFont(mainFont);
-        //Connection con;
-		try {
-			//con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_project", "root", "1234");
 
-			Today_Total_Orders_Worth_Value.setText(DataBase.todayOrdersValue());
-			Today_Total_Orders_Worth_Value.setEditable(false);
+		Today_Total_Orders_Worth_Value.setText(DataBase.todayOrdersValue());
+		Today_Total_Orders_Worth_Value.setEditable(false);
 			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
         c.add(Today_Total_Orders_Worth_Value);
 
 
@@ -238,36 +219,9 @@ class Frame extends JFrame implements ActionListener {
         c.add(Today_Buyer);
 
         // Define table data (adjust column names and data types as needed)
-        String[] Today_Buyers = {"Name", "Total"};
-        Connection con;
-        Object[][] Today_Buyer_amount = {{}};
-		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_project", "root", "1234");
-			Statement stmt = con.createStatement();
-			int i=0;
-			ArrayList<String> names=new ArrayList<>();
-			ArrayList<String> amounts=new ArrayList<>();
-			ResultSet res= stmt.executeQuery("select outletname,sum(total) from bills where billdate=current_date() group by outletname");			
-			while(res.next()) {
-				names.add(res.getString(1));
-				amounts.add(res.getString(2));
-				//i++;
-			}
-			
-			Today_Buyer_amount = new Object[names.size()][2];
-			for(i=0;i<names.size();i++) {
-				Today_Buyer_amount[i][0]=names.get(i);
-				Today_Buyer_amount[i][1]=amounts.get(i);
-			}
-			
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
+        String[] Today_Buyers = {"Name", "Total"};      
         // Create the table model of today buyers.
-        Today_Buyer_tableModel = new DefaultTableModel(Today_Buyer_amount, Today_Buyers);
+        Today_Buyer_tableModel = new DefaultTableModel(DataBase.todayBuyerDetails(), Today_Buyers);
 
         // Create the JTable
         Today_Buyer_table = new JTable(Today_Buyer_tableModel);
@@ -297,40 +251,8 @@ class Frame extends JFrame implements ActionListener {
 
         // Creating product table
         String[] Today_Products = {"Inlet", "Outlet", "Product", "Amount"};
-        Object[][] Today_Products_amount = {{}};
-        try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_project", "root", "1234");
-			Statement stmt = con.createStatement();
-			int i=0;
-			ArrayList<String> inletnames=new ArrayList<>();
-			ArrayList<String> outletnames=new ArrayList<>();
-			ArrayList<String> productnames=new ArrayList<>();
-			ArrayList<String> amounts=new ArrayList<>();
-			ResultSet res= stmt.executeQuery("select inletname,outletname,productname,total from bills where billdate=current_date() ");			
-			while(res.next()) {
-				inletnames.add(res.getString(1));
-				outletnames.add(res.getString(2));
-				productnames.add(res.getString(3));
-				amounts.add(res.getString(4));
-				//i++;
-			}
-			
-			Today_Products_amount = new Object[productnames.size()][4];
-			for(i=0;i<productnames.size();i++) {
-				Today_Products_amount[i][0]=inletnames.get(i);
-				Today_Products_amount[i][1]=outletnames.get(i);
-				Today_Products_amount[i][2]=productnames.get(i);
-				Today_Products_amount[i][3]=amounts.get(i);
-			}
-			
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
         // Create the table model of today buyers.
-        Today_Product_tableModel = new DefaultTableModel(Today_Products_amount, Today_Products);
+        Today_Product_tableModel = new DefaultTableModel(DataBase.todaySalesDetails(), Today_Products);
 
         // Create the JTable
         Today_Product_table = new JTable(Today_Product_tableModel);
