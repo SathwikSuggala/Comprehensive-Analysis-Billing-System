@@ -22,7 +22,53 @@ public class DataBase {
     private static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
     }
+    
+//to count the orders that were placed today.
+    public static String countTodayOrders() {
+    	String count="";
+    	try (Connection con = getConnection();){
+    		
+    		Statement stmt = con.createStatement();
+			ResultSet res=stmt.executeQuery("select count(billdate) from bills where billdate =" + "'" + LocalDate.now().toString() + "'");
+			
+			while(res.next()) {
+				count=res.getString(1);
+			}
+    	}
+    	catch(SQLException e) {
+    		e.printStackTrace();
+    	}
+    	return count;
+    }
 
+    
+//to calculate todays total orders value
+    public static String todayOrdersValue() {
+    	String value="";
+    	try (Connection con = getConnection();){
+    		
+			Statement stmt = con.createStatement();
+			ResultSet res=stmt.executeQuery("select sum(total) from bills where billdate =" + "'" + LocalDate.now().toString() + "'");
+			float count=0;
+			//String value;
+			try {
+			while(res.next()) {
+				count+=Float.parseFloat( res.getString(1));
+			}
+			value=""+count;
+			}
+			catch(NullPointerException e2) {
+				value="0";
+			}
+    	}
+    	catch(SQLException e) {
+    		e.printStackTrace();
+    	}
+    	return value;
+    }    
+ 
+    
+//to add the outlet details.
     public static void addOutletsDetails(String outletName, String ownerName, String address, String contact) {
         String statement = "INSERT INTO outlets (shopname, ownername, address, mobilenumber) VALUES (?, ?, ?, ?)";
         try (Connection con = getConnection();

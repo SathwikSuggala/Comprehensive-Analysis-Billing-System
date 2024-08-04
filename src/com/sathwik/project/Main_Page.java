@@ -191,20 +191,20 @@ class Frame extends JFrame implements ActionListener {
         Today_Total_Orders_Count = new JTextField("NULL");
         Today_Total_Orders_Count.setBounds((int)(sw*0.07),(int)(sh*0.22),(int)(sw*0.08),(int)(sh*0.05));
         Today_Total_Orders_Count.setFont(mainFont);
-        Connection con;
+        //Connection con;
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_project", "root", "1234");
-			Statement stmt = con.createStatement();
-			ResultSet res=stmt.executeQuery("select count(billdate) from bills where billdate =" + "'" + LocalDate.now().toString() + "'");
-			String count="";
-			while(res.next()) {
-				count=res.getString(1);
-			}
+//			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_project", "root", "1234");
+//			Statement stmt = con.createStatement();
+//			ResultSet res=stmt.executeQuery("select count(billdate) from bills where billdate =" + "'" + LocalDate.now().toString() + "'");
+//			String count="";
+//			while(res.next()) {
+//				count=res.getString(1);
+//			}
 			
-			Today_Total_Orders_Count.setText(count);
+			Today_Total_Orders_Count.setText(DataBase.countTodayOrders());
 			Today_Total_Orders_Count.setEditable(false);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -220,24 +220,12 @@ class Frame extends JFrame implements ActionListener {
         Today_Total_Orders_Worth_Value.setFont(mainFont);
         //Connection con;
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_project", "root", "1234");
-			Statement stmt = con.createStatement();
-			ResultSet res=stmt.executeQuery("select sum(total) from bills where billdate =" + "'" + LocalDate.now().toString() + "'");
-			float count=0;
-			String value;
-			try {
-			while(res.next()) {
-				count+=Float.parseFloat( res.getString(1));
-			}
-			value=""+count;
-			}
-			catch(NullPointerException e2) {
-				value="0";
-			}
-			Today_Total_Orders_Worth_Value.setText(value);
+			//con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_project", "root", "1234");
+
+			Today_Total_Orders_Worth_Value.setText(DataBase.todayOrdersValue());
 			Today_Total_Orders_Worth_Value.setEditable(false);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -251,7 +239,7 @@ class Frame extends JFrame implements ActionListener {
 
         // Define table data (adjust column names and data types as needed)
         String[] Today_Buyers = {"Name", "Total"};
-        //Connection con;
+        Connection con;
         Object[][] Today_Buyer_amount = {{}};
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_project", "root", "1234");
