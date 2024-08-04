@@ -97,7 +97,33 @@ public class DataBase {
     	
     	return todayBuyerAmount;
     }
+
     
+
+    public static DefaultPieDataset inletsVsOutlets() {
+    	
+    	DefaultPieDataset piechart2_dataset = new DefaultPieDataset();
+    	try (Connection con = getConnection();){
+    		
+    		Statement stmt = con.createStatement();
+			ResultSet res1= stmt.executeQuery("select count(shopname) from outlets");
+			while(res1.next()) {
+				int noOutlets=res1.getInt(1);
+				piechart2_dataset.setValue("Outlets", noOutlets);
+			}
+			ResultSet res2= stmt.executeQuery("select count(inletname) from inlets");
+			while(res2.next()) {
+				int noInlets=res2.getInt(1);
+				piechart2_dataset.setValue("Inlets", noInlets);
+			}
+
+    	}
+    	catch(SQLException e) {
+    		e.printStackTrace();
+    	}
+    	return piechart2_dataset;
+    	
+    }
     
 //to get the detailed view of sales done today
     public static Object[][] todaySalesDetails(){

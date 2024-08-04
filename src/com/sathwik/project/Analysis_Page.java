@@ -260,30 +260,8 @@ class analysis_frame extends JFrame implements ActionListener {
 
 //pie chart 2
         piechart2_dataset = new DefaultPieDataset();
-        Connection con;
-		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_project", "root", "1234");
-			Statement stmt = con.createStatement();
-			ResultSet res1= stmt.executeQuery("select count(shopname) from outlets");
-			while(res1.next()) {
-				int noOutlets=res1.getInt(1);
-				piechart2_dataset.setValue("Outlets", noOutlets);
-			}
-			ResultSet res2= stmt.executeQuery("select count(inletname) from inlets");
-			while(res2.next()) {
-				int noInlets=res2.getInt(1);
-				piechart2_dataset.setValue("Inlets", noInlets);
-			}
-			
-			
-			
-	        
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        //piechart2_dataset = DataBase.addressWiseSales();
+
+        piechart2_dataset = DataBase.inletsVsOutlets();
         
 
 
