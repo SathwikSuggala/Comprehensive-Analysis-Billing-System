@@ -160,8 +160,137 @@ public class DataBase {
     	
     	return todaySales;
     }
+ 
     
     
+//to get the details of the inlets
+    public static Object[][] inletsDetails(){
+    	
+    	Object[][] inletsDetails = {{}};
+    	try (Connection con = getConnection();){
+    		Statement stmt = con.createStatement();
+			//int i=0;
+			ArrayList<String> inletnames=new ArrayList<>();
+			ArrayList<String> ownernames=new ArrayList<>();
+			ArrayList<String> address=new ArrayList<>();
+			ArrayList<String> contacts=new ArrayList<>();
+			String[] avlInlets=DataBase.availableInletsNames();
+			
+			ResultSet res= stmt.executeQuery("select inletname,ownername,address,mobilenumber from inlets ;");			
+			while(res.next()) {
+				inletnames.add(res.getString(1));
+				ownernames.add(res.getString(2));
+				address.add(res.getString(3));
+				contacts.add(res.getString(4));
+				//i++;
+			}
+			String countOfProducts[]=new String[avlInlets.length];
+			
+			for(int i=0;i<avlInlets.length;i++) {
+				try{
+					
+				ResultSet res1=stmt.executeQuery("select count(productname) from "+ avlInlets[i]+";");
+				while(res1.next()) {
+					countOfProducts[i]=res1.getString(1);
+				}
+				}
+				catch(SQLException e1) {
+					countOfProducts[i]="0";
+					
+				}
+			}
+			inletsDetails = new Object[inletnames.size()][5];
+			for(int i=0;i<inletnames.size();i++) {
+				inletsDetails[i][0]=inletnames.get(i);
+				inletsDetails[i][1]=ownernames.get(i);
+				inletsDetails[i][2]=address.get(i);
+				inletsDetails[i][3]=contacts.get(i);
+				inletsDetails[i][4]=countOfProducts[i];
+			}
+    	}
+    	catch(SQLException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return inletsDetails;
+    	
+    }
+ 
+//to get inlet wise number of products
+    public static Object[][] inletsProductCount(){
+    	
+    	Object[][] inletsInfo = {{}};
+    	
+    	try (Connection con = getConnection();){
+    		
+    		Statement stmt = con.createStatement();
+			String[] avlInlets=DataBase.availableInletsNames();
+			String countOfProducts[]=new String[avlInlets.length];
+			
+			for(int i=0;i<avlInlets.length;i++) {
+				try{
+					
+				ResultSet res1=stmt.executeQuery("select count(productname) from "+ avlInlets[i]+";");
+				while(res1.next()) {
+					countOfProducts[i]=res1.getString(1);
+				}
+				}
+				catch(SQLException e1) {
+					countOfProducts[i]="0";
+					
+				}
+				
+			}
+			inletsInfo=new String[avlInlets.length][2];
+			for(int i=0;i<avlInlets.length;i++) {
+				inletsInfo[i][0]=avlInlets[i];
+				inletsInfo[i][1]=countOfProducts[i];
+			}
+    	}
+    	catch(SQLException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return inletsInfo;
+    }
+    
+    
+//to get the outlets information
+    public static Object[][] outletsDetails(){
+    	
+    	Object[][] outletsDetails = {{}};
+    	try (Connection con = getConnection();){
+    		
+    		Statement stmt = con.createStatement();
+			int i=0;
+			
+			ArrayList<String> outletnames=new ArrayList<>();
+			ArrayList<String> ownernames=new ArrayList<>();
+			ArrayList<String> address=new ArrayList<>();
+			ArrayList<String> contact=new ArrayList<>();
+			ResultSet res= stmt.executeQuery("select shopname,ownername,address,mobilenumber from outlets;");			
+			while(res.next()) {
+				outletnames.add(res.getString(1));
+				ownernames.add(res.getString(2));
+				address.add(res.getString(3));
+				contact.add(res.getString(4));
+				//i++;
+			}
+			
+			outletsDetails = new Object[outletnames.size()][4];
+			for(i=0;i<outletnames.size();i++) {
+				outletsDetails[i][0]=outletnames.get(i);
+				outletsDetails[i][1]=ownernames.get(i);
+				outletsDetails[i][2]=address.get(i);
+				outletsDetails[i][3]=contact.get(i);
+			}
+    	}
+    	catch(SQLException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return outletsDetails;
+    }
 //to add the outlet details.
     public static void addOutletsDetails(String outletName, String ownerName, String address, String contact) {
         String statement = "INSERT INTO outlets (shopname, ownername, address, mobilenumber) VALUES (?, ?, ?, ?)";

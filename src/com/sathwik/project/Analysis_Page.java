@@ -262,9 +262,6 @@ class analysis_frame extends JFrame implements ActionListener {
         piechart2_dataset = new DefaultPieDataset();
 
         piechart2_dataset = DataBase.inletsVsOutlets();
-        
-
-
 
         piechart2=ChartFactory.createPieChart(
                 "Inlets VS Outlets",

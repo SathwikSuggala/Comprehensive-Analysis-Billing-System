@@ -274,41 +274,9 @@ class AddOutletFrame extends JFrame implements ActionListener {
 
 //adding available inlets table
         String[] outlets = {"OUTLET", "OWNER","ADDRESS","CONTACT"};
-        Object[][] outletsDetails = {{}};
-        Connection con;
-        	try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_project", "root", "1234");
-			Statement stmt = con.createStatement();
-			int i=0;
-			
-			ArrayList<String> outletnames=new ArrayList<>();
-			ArrayList<String> ownernames=new ArrayList<>();
-			ArrayList<String> address=new ArrayList<>();
-			ArrayList<String> contact=new ArrayList<>();
-			ResultSet res= stmt.executeQuery("select shopname,ownername,address,mobilenumber from outlets;");			
-			while(res.next()) {
-				outletnames.add(res.getString(1));
-				ownernames.add(res.getString(2));
-				address.add(res.getString(3));
-				contact.add(res.getString(4));
-				//i++;
-			}
-			
-			outletsDetails = new Object[outletnames.size()][4];
-			for(i=0;i<outletnames.size();i++) {
-				outletsDetails[i][0]=outletnames.get(i);
-				outletsDetails[i][1]=ownernames.get(i);
-				outletsDetails[i][2]=address.get(i);
-				outletsDetails[i][3]=contact.get(i);
-			}
-			
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
         // Create the table model of today buyers.
-        availableOutletsTableModel = new DefaultTableModel(outletsDetails, outlets);
+        availableOutletsTableModel = new DefaultTableModel(DataBase.outletsDetails(), outlets);
 
         // Create the JTable
         availableOutletsTable = new JTable(availableOutletsTableModel);
@@ -322,7 +290,7 @@ class AddOutletFrame extends JFrame implements ActionListener {
         // Adjusting font and size.
         availableOutletsTable.setFont(table_font);
 
-        // Create the scroll pane with vertical and horizontal scrollbars as needed
+        // Create the scroll pane with vertical and horizontal scroll bars as needed
         availableOutletsScrollPane = new JScrollPane(availableOutletsTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         // Adjust table height to fit into the panel that I will be creating.
         availableOutletsScrollPane.setPreferredSize(new Dimension(800, 530));

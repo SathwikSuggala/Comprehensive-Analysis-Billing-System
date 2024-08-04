@@ -280,57 +280,9 @@ class AddInletsFrame extends JFrame implements ActionListener {
 
 //adding available inlets table
         String[] inlets = {"INLET", "OWNER","ADDRESS","CONTACT","PRODUCTS"};
-        Object[][] inletsDetails = {{}};
-        Connection con;
-        try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_project", "root", "1234");
-			Statement stmt = con.createStatement();
-			//int i=0;
-			ArrayList<String> inletnames=new ArrayList<>();
-			ArrayList<String> ownernames=new ArrayList<>();
-			ArrayList<String> address=new ArrayList<>();
-			ArrayList<String> contacts=new ArrayList<>();
-			String[] avlInlets=DataBase.availableInletsNames();
-			
-			ResultSet res= stmt.executeQuery("select inletname,ownername,address,mobilenumber from inlets ;");			
-			while(res.next()) {
-				inletnames.add(res.getString(1));
-				ownernames.add(res.getString(2));
-				address.add(res.getString(3));
-				contacts.add(res.getString(4));
-				//i++;
-			}
-			String countOfProducts[]=new String[avlInlets.length];
-			
-			for(int i=0;i<avlInlets.length;i++) {
-				try{
-					
-				ResultSet res1=stmt.executeQuery("select count(productname) from "+ avlInlets[i]+";");
-				while(res1.next()) {
-					countOfProducts[i]=res1.getString(1);
-				}
-				}
-				catch(SQLException e1) {
-					countOfProducts[i]="0";
-					
-				}
-			}
-			inletsDetails = new Object[inletnames.size()][5];
-			for(int i=0;i<inletnames.size();i++) {
-				inletsDetails[i][0]=inletnames.get(i);
-				inletsDetails[i][1]=ownernames.get(i);
-				inletsDetails[i][2]=address.get(i);
-				inletsDetails[i][3]=contacts.get(i);
-				inletsDetails[i][4]=countOfProducts[i];
-			}
-			
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        // Create the table model of today buyers.
-        availableInletsTableModel = new DefaultTableModel(inletsDetails, inlets);
+
+        // Create the table model of inlets information
+        availableInletsTableModel = new DefaultTableModel(DataBase.inletsDetails(), inlets);
 
         // Create the JTable
         availableInletsTable = new JTable(availableInletsTableModel);

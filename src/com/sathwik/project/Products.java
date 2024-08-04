@@ -394,39 +394,9 @@ class ExistingProductsFrame extends JFrame implements ActionListener {
     public JPanel inletsTable(){
         Font table_font = new Font("SansSerif", Font.PLAIN, 20);
         String[] inlets = {"INLETS", "PRODUCTS"};
-        Object[][] inletsDetails = {{}};
-        Connection con;
-        try {
-        	con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_project", "root", "1234");
-			Statement stmt = con.createStatement();
-			String[] avlInlets=DataBase.availableInletsNames();
-			String countOfProducts[]=new String[avlInlets.length];
-			
-			for(int i=0;i<avlInlets.length;i++) {
-				try{
-					
-				ResultSet res1=stmt.executeQuery("select count(productname) from "+ avlInlets[i]+";");
-				while(res1.next()) {
-					countOfProducts[i]=res1.getString(1);
-				}
-				}
-				catch(SQLException e1) {
-					countOfProducts[i]="0";
-					
-				}
-				
-			}
-			inletsDetails=new String[avlInlets.length][2];
-			for(int i=0;i<avlInlets.length;i++) {
-				inletsDetails[i][0]=avlInlets[i];
-				inletsDetails[i][1]=countOfProducts[i];
-			}
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+
         // Create the table model of today buyers.
-        availableInletsTableModel = new DefaultTableModel(inletsDetails, inlets);
+        availableInletsTableModel = new DefaultTableModel(DataBase.inletsProductCount(), inlets);
 
         // Create the JTable
         availableInletsTable = new JTable(availableInletsTableModel);
@@ -739,39 +709,8 @@ class NewProductsFrame extends JFrame implements ActionListener{
 
 //adding available inlets table
         String[] inlets = {"INLETS", "PRODUCTS"};
-        Object[][] inletsDetails = {{}};
-        Connection con;
-        try {
-        	con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_project", "root", "1234");
-			Statement stmt = con.createStatement();
-			String[] avlInlets=DataBase.availableInletsNames();
-			String countOfProducts[]=new String[avlInlets.length];
-			
-			for(int i=0;i<avlInlets.length;i++) {
-				try{
-					
-				ResultSet res1=stmt.executeQuery("select count(productname) from "+ avlInlets[i]+";");
-				while(res1.next()) {
-					countOfProducts[i]=res1.getString(1);
-				}
-				}
-				catch(SQLException e1) {
-					countOfProducts[i]="0";
-					
-				}
-				
-			}
-			inletsDetails=new String[avlInlets.length][2];
-			for(int i=0;i<avlInlets.length;i++) {
-				inletsDetails[i][0]=avlInlets[i];
-				inletsDetails[i][1]=countOfProducts[i];
-			}
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
         // Create the table model of today buyers.
-        availableInletsTableModel = new DefaultTableModel(inletsDetails, inlets);
+        availableInletsTableModel = new DefaultTableModel(DataBase.inletsProductCount(), inlets);
 
         // Create the JTable
         availableInletsTable = new JTable(availableInletsTableModel);
