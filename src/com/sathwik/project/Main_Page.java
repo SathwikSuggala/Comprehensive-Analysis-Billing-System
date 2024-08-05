@@ -359,6 +359,7 @@ class Frame extends JFrame implements ActionListener {
 
 public class Main_Page {
     public static void main(String[] args) {
+    	DataBase.setUpDataBase();
         new Frame();
     }
 }

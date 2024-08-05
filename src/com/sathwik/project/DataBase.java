@@ -23,6 +23,104 @@ public class DataBase {
         return DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
     }
     
+// to initialise the data base at the first time of the application
+    public static void setUpDataBase() {
+    
+    	//creating data base if not exists
+    	try {
+    		
+    		String url = "jdbc:mysql://localhost:3306";
+            String username = "root";
+            String password = "1234";
+
+            // SQL statement to create a database
+            String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS java_project";
+            // Establish the connection and execute the SQL statement
+            try (Connection connection = DriverManager.getConnection(url, username, password);
+                 Statement statement = connection.createStatement()) {
+
+                // Execute the SQL statement
+                statement.executeUpdate(createDatabaseSQL);
+                System.out.println("Database created successfully!");
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }    		
+    		
+    	}catch(Exception e) {
+    		System.out.println("Data Base already exists");
+    	}
+    	
+    	//creating bills table
+    	try(Connection con = getConnection();
+    			Statement createStmt = con.createStatement()){
+                 
+    		
+            String createTableSQL = "CREATE TABLE bills(" +
+            		"inletname varchar(50),"+
+            		"productname varchar(50),"+
+            		"outletname varchar(50),"+
+            		"quantity varchar(20),"+
+            		"cgst varchar(10),"+
+            		"sgst varchar(10),"+
+            		"total varchar(10),"+
+            		"billdate DATE)";
+            createStmt.execute(createTableSQL);
+            
+    	}catch(Exception e) {
+    		
+    		System.out.println("bills table already exists");
+    	}
+    	
+    	
+    	//creating inletname table
+    	try (Connection con = getConnection();
+    			Statement createStmt = con.createStatement()){
+    		
+    		String createTableSQL = "CREATE TABLE inletname(" +
+                    "productname varchar(50) PRIMARY KEY,"+
+                    "quantity varchar(50),"+ 
+                    "costprice varchar(50),"+
+                    "sellingprice varchar(50))";
+    		createStmt.execute(createTableSQL);
+    	}catch(Exception e) {
+    		
+    		System.out.println("inletname table already exists");
+    	}
+    	
+    	
+    	//creating table inlets
+    	try (Connection con = getConnection();
+    			Statement createStmt = con.createStatement()){
+    		
+    		String createTableSQL = "CREATE TABLE inlets(" +
+    				"inletname varchar(50) not null,"+
+    				"ownername varchar(50) not null,"+
+    				"address varchar(100),"+
+    				"mobilenumber varchar(15))";
+    		createStmt.execute(createTableSQL);
+    	}catch(Exception e) {
+    		
+    		System.out.println("inlets table already exists");
+    	}
+    	
+    	
+    	//creating table outlets
+    	try (Connection con = getConnection();
+    			Statement createStmt = con.createStatement()){
+    		
+    		String createTableSQL = "CREATE TABLE outlets(" +
+    				"shopname varchar(50) not null,"+
+    				"ownername varchar(50) not null,"+
+    				"mobilenumber varchar(100),"+
+    				"address varchar(100))";
+    		createStmt.execute(createTableSQL);
+    	}catch(Exception e) {
+    		
+    		System.out.println("outlets table already exists");
+    	}
+    }
+    
 //to count the orders that were placed today.
     public static String countTodayOrders() {
     	String count="";
